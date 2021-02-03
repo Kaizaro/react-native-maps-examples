@@ -20,6 +20,10 @@ const MyLocation = ({latitude, longitude}) => (
     </View>
 );
 
+const renderConsoleMessage = (renderCount) => {
+    console.log('>>> render Map => count: ', renderCount);
+}
+
 class HomeWork1Screen extends Component {
     constructor(props) {
         super(props);
@@ -74,7 +78,7 @@ class HomeWork1Screen extends Component {
     }
 
     render() {
-        console.log('>>> render Map => count: ', this.state.currentCount);
+        renderConsoleMessage(this.state.currentCount);
         return (
             <>
                 <ClusteredMapView
