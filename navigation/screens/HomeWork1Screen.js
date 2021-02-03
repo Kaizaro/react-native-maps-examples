@@ -13,6 +13,13 @@ const INITIAL_REGION = {
     longitudeDelta: 0.0922,
 };
 
+const MyLocation = ({latitude, longitude}) => (
+    <View style={styles.infoBlockContainer}>
+        <Text>latitude: {latitude}</Text>
+        <Text>longitude: {longitude}</Text>
+    </View>
+);
+
 class HomeWork1Screen extends Component {
     constructor(props) {
         super(props);
@@ -41,6 +48,7 @@ class HomeWork1Screen extends Component {
                 },
             ],
             currentRegion: {...INITIAL_REGION},
+            currentCount: 0,
         };
     }
 
@@ -61,18 +69,19 @@ class HomeWork1Screen extends Component {
     onRegionChange(region) {
         this.setState({
             currentRegion: region,
+            currentCount: this.state.currentCount + 1,
         });
     }
 
     render() {
-        console.log('render Map');
+        console.log('>>> render Map => count: ', this.state.currentCount);
         return (
             <>
                 <ClusteredMapView
                     animateClusters={false}
                     initialRegion={INITIAL_REGION}
                     data={this.state.data}
-                    onRegionChange={this.onRegionChange}
+                    onRegionChangeComplete={this.onRegionChange}
                     renderCluster={this.renderCluster}
                     renderMarker={this.renderMarker}
                     style={styles.map}
@@ -106,10 +115,3 @@ const styles = StyleSheet.create({
 });
 
 export default HomeWork1Screen;
-
-const MyLocation = ({latitude, longitude}) => (
-    <View style={styles.infoBlockContainer}>
-        <Text>latitude: {latitude}</Text>
-        <Text>longitude: {longitude}</Text>
-    </View>
-);
