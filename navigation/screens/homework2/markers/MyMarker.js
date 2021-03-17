@@ -5,7 +5,10 @@ import {Marker} from 'react-native-maps';
 
 export default class MyMarker extends Component {
     shouldComponentUpdate(nextProps, nextState) {
-        return false;
+        return this.props.image !== nextProps.image;
+
+        // Old code
+        // return false;
     }
 
     render() {
