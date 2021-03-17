@@ -6,11 +6,12 @@
   1. Инициализация карты и кластеризация
   2. Улучшение производительности карты
   3. Домашняя работа #1
-  4. [**TODO**] Описание дополнительных параметров
-  5. [**TODO**] Установка Placeholder при работе с картой
-  6. [**TODO**] Использование изображений в маркерах
-  7. [**TODO**] Использование контента в маркерах
-  8. [**TODO**]
+  4. Описание дополнительных параметров
+  5. Использование изображений в маркерах
+  6. Домашняя работа #2
+  7. [**TODO**] Установка Placeholder при работе с картой
+  8. [**TODO**] Использование контента в маркерах
+  9. [**TODO**]
  
 ---
 Пример применения вышеуказанных рекомендаций
@@ -330,5 +331,123 @@ export default class MyMarker extends Component {
 
  Необходимо увеличить производительность в коде файла **HomeWork1Screen.js** (избежать лишние re-renders)
 
-### 4.  [**TODO**] Описание дополнительных параметров
+### 4.  Описание дополнительных параметров
 ---
+
+###
+| Prop | Description | Default value |
+| ------ | ------ | ------ |
+| radius | Радиус работы кластера на экране | screen width * 4.5% |
+| edgePadding | Отступы между краев экрана и маркеров при нажатии на кластер | { top: 10, left: 10, bottom: 10, right: 10 } |
+| accessor | Название key с содержимым координат в значении data | location |
+| minZoom | Минимальное значение Zoom для работы кластеризации | 1 |
+| maxZoom | Максимальное значение Zoom для работы кластеризации | 16 |
+| minZoomLevel | Минимальный предел Zoom для карты | 0 |
+| maxZoomLevel | Максимальный предел Zoom для карты | 20 |
+| showsPointsOfInterest | Отображать ли достопримечательности на карте | true |
+| showsBuildings | Отображать ли 3D-эффект домов при максимальном Zoom | true |
+| showsTraffic | Отображать ли информацию о дорожном движении | true |
+| showsIndoors | Отображать ли карту помещений | true |
+
+### 5. Использование изображений в маркерах
+
+Рассмотрим несколько способов использования изображений в маркерах:
+1. Подключение изображения через встроенный проп маркера **image**
+
+```JSX
+const MARKER_IMAGE = require('../../../../assets/favicon.png');
+
+export default class MyMarkerExample1 extends Component {
+    shouldComponentUpdate(nextProps, nextState) {
+        return false;
+    }
+
+    render() {
+        const {id, location} = this.props;
+
+        const identifier = `marker-${id}`;
+
+        return (
+            <Marker
+                image={MARKER_IMAGE}
+                identifier={identifier}
+                tracksViewChanges={false}
+                tracksInfoWindowChanges={false}
+                coordinate={location}
+            />
+        );
+    }
+}
+```
+
+2. Через компонент **Image** внутри **Marker**
+
+```JSX
+const MARKER_IMAGE = require('../../../../assets/favicon.png');
+
+export default class MyMarkerExample2 extends Component {
+    shouldComponentUpdate(nextProps, nextState) {
+        return false;
+    }
+
+    render() {
+        const {id, location} = this.props;
+
+        const identifier = `marker-${id}`;
+
+        return (
+            <Marker
+                identifier={identifier}
+                tracksViewChanges={false}
+                tracksInfoWindowChanges={false}
+                coordinate={location}>
+                <View style={styles.myMarkerStyle}>
+                    <Image source={MARKER_IMAGE} style={styles.imageStyle} />
+                </View>
+            </Marker>
+        );
+    }
+}
+```
+
+3. Использование изображение в Base64 формате
+
+```JSX
+const LOGO_BASE64 = `iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAGKDAGaAAAFgUlEQVRYw7WXa2wUVRTH/20p7fZBW0p5iAplaUELCqEFlUCMYKwJKMYgaEwIUpQYNCIWRYgvQtTS6AeiKEqIQDBIAEFAEEm1DUVUoIqPVqhCC/IoammhC9vt/vywM7szu7NLLfHMl7n3nP/533vuPefMSHap8wNIoG57pxIYSErZDyCgB8qogTYUeKT+v2C+SlLanqA3v4EBwSdAasAI4CUUcA7wRsiBMbDIjQDQd4M0ogimtkrbMWSgAVzibUIouTIwfc4kJaVIkpT+PTxLiGplkHCo6Wq+uSOydlrYl3jD1xOSAQ5zdzcA1CJJK/ygOEk91kIhAMsQmeMDq9MRg7ojGExIINkrOAm8D4DHSg9QwiQApiDmeQzFWaDE2LUQ4DXjedimsAQaShgbqXj4NM4ISZpmVeTbdt6vGISrWtElfs76Fuig9+9hij7qFjbTs6GecEnxSdKa4DjbK0nFrzWFTI4yE/jVsvDsMaauP0JxX0ARviBgOg0A3GnZaVpO4N3llZRYYZrez8dhC/KRxrBVYSt37TPVgSh6GQN8FFxSQPLOqbsBSP3Wy2gLwJIRQcC91mPIOGyaTaTKARBxbllH7EtqZkJsgCRlvrTbF21JQiS3KN7pkFNH/BMOiJ+nq8vQTTNI8ChZnZabXJs7bxzf9zjAO/8kTLfNxynXwTpze6PlnG8/o16B+fzTfqCRgq1W62nXtYff1X1orjRiqzn2M8TgySlqAFjNuqDxFdIRKpWeag/Vo7zfJWXXei1ep3AaKDYDWypNvhLQnETk1+kWf/hC3iUrdGil0i3lAE8iRM/r1cpm3g0aNzAdgB8sACnvm8Bo0AuSLgLwKMeBQjosTEuCAJu0BSPgjsjo5WS0KyUM4Amqf6aO2cFRPUKU0cLAOhvgsgUAUM4u/PQz9lAGwC5/75eDgFlhAHuxKzNmynGtMwDtvMWOmIBahEjbYAACBWYCzY6A18kx3jI2WXolQJvRKMLqb6g5bbO0AnMPlbwSFdBrpwMA4FkOOwJ6mw08q/J8jChZnhtCR9HdfTo2IP6JyGQrfKbVGZBeETWdB723PwzQ/ZISr1IDchs9IcCtnasbWWMvCC3SNUhm2ophJ2raq9pyjycvjbju1yTje/604IzHllMXmH0256BGRBoPTipaO/jv4ktTPaNaC+rd02I5dqUsdTdUXiaGfOYbdKbPi2bnLkjLO3cszGJx+00fRLoemXlg1qkLVDOOxVyM6v4MM4kLlpQh6cObI22OIcatNh0nJj3X/8S2S3aTFhZwJ9/Z5raTZ71npZKUOWVxhPtDuBD5jZI7c+8DJ8/Giga7GcObzCMxMkFKJWlUYm6ztU0cYbihH7lccbv3cw9z+Tuq+yrG8gptNDGHBEcCSXGDjz7NDG6zWQyYLylhTyDSl1nK7VRYHLfxKmOpjCDcaH5dR5T1obPddekel9f95/BPs/ubwa+wB76acTzPRJ6hOWbYGnkEEb/wqlc96eu2CHAJ1cznLg5Fdf8lBQjxBqv87qbcx2MQJFd5HAjMyrSD0bxN6ABbWUiSQ9f4jQnNA7epjwNBSvWVGATmrX+M+xjjUGbLbHbtLLvU7w/dYf/0OrCV0ZTjjUEQ/WOxzJYh+QiRut5GkP6dz/jBms0kartA0ByWIekbbQQ9DnXYHG2gkIJOE7gc5jK32AgyavwOZ/A504N/AjG/px2entvtxf5Hoh5yByspZMN/JMjZbQ/RwRrf1W5RLZMY3Pkd7Ii8q5N71y9rae/CLbI/PY5qfKyk7ttvy13nj3aBIN6XslwZnW2TcX1KMlre8vk7RZB6QsVd7ccD3dUPXTwVhSCuI+lD80fi2iQhb1H+X5ssBEmn9KD+B7k54yut0XX/HfgvpUkmTvPggOsAAAAASUVORK5CYII=`;
+
+export default class MyMarkerExample3 extends Component {
+    shouldComponentUpdate(nextProps, nextState) {
+        return false;
+    }
+
+    render() {
+        const {id, location} = this.props;
+
+        const identifier = `marker-${id}`;
+
+        return (
+            <Marker
+                identifier={identifier}
+                tracksViewChanges={false}
+                tracksInfoWindowChanges={false}
+                coordinate={location}>
+                <View style={styles.myMarkerStyle}>
+                    <Image
+                        source={{
+                            uri: `data:image/png;base64,${LOGO_BASE64}`,
+                        }}
+                        style={styles.imageStyle}
+                    />
+                </View>
+            </Marker>
+        );
+    }
+}
+```
+
+### 6. Домашняя работа #2
+
+На карте используется пример из пункта 5, с изображением в маркере (вариант 2).
+В компоненте добавлена возможность смены изображения, но изображение не изменяется, необходимо это пофиксить.
+
+Файл **HomeWork2Screen.js**
